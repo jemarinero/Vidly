@@ -19,7 +19,8 @@ namespace Vidly.Models
         public DateTime DateAdded { get; set; }
         [Required]
         [Display(Name = "Number In Stock")]
-        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "Number in stock must be a natural number")]
+        [RegularExpression("([0-9][0-9]*)", ErrorMessage = "Number in stock must be a natural number")]
+        [Range(1,20,ErrorMessage = "The field Number In Stock must be between 1 and 20")]
         public int NumberInStock { get; set; }
         public Genre Genre { set; get; }
         [Required]

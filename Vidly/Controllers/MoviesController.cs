@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Vidly.Models;
 using Vidly.ViewModel;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 
 namespace Vidly.Controllers
 {
@@ -104,14 +105,26 @@ namespace Vidly.Controllers
 
             var movieFormViewModel = new MovieFormViewModel
             {
+                Movie = new Movie(),
                 Genres = genres,
                 Action = "New"
             };
             return View("MoviesForm",movieFormViewModel);
         }
-
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Movie movie)
         {
+            if (!ModelState.IsValid)
+            {
+                var movieFormViewModel = new MovieFormViewModel
+                {
+                    Movie = movie,
+                    Genres = _context.Genres.ToList(),
+                    Action = "New"
+                };
+                return View("MoviesForm", movieFormViewModel);
+            }
             if (movie.Id == 0)
             {
                 movie.DateAdded = DateTime.Now;
@@ -126,7 +139,14 @@ namespace Vidly.Controllers
                 movieInDb.NumberInStock = movie.NumberInStock;
                 movieInDb.GenreId = movie.GenreId;
             }
-            _context.SaveChanges();
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (DbEntityValidationException e)
+            {
+                Console.Write(e);
+            }
             return RedirectToAction("Index","Movies");
         }
     }
