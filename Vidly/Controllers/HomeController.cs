@@ -9,6 +9,8 @@ namespace Vidly.Controllers
     [AllowAnonymous]
     public class HomeController : Controller
     {
+        //[OutputCache(Duration = 50, Location = System.Web.UI.OutputCacheLocation.Server,VaryByParam ="*")] //Activa Catching
+        //[OutputCache(Duration = 0, VaryByParam ="*",NoStore = true)] //inactiva Catching
         public ActionResult Index()
         {
             return View();
